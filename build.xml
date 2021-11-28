@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="Arbre">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="Arbre.classpath">
+        <pathelement location="bin"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="Arbre.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project." name="build-refprojects"/>
+    <target name="Fennetre">
+        <java classname="arbre.Fennetre" failonerror="true" fork="yes">
+            <classpath refid="Arbre.classpath"/>
+        </java>
+    </target>
+	<target name="Demo" description="pas utilisé">
+        <java classname="arbre.Demo" failonerror="true" fork="yes">
+            <classpath refid="Arbre.classpath"/>
+        </java>
+    </target>
+	<target name="javadoc">
+		<javadoc sourcepath="src" destdir="doc" >
+		<fileset dir="src" defaultexcludes="yes">
+			<include name="**" />
+		</fileset>
+		</javadoc>
+	</target>
+	<target name="packaging" depends="build-project">
+		<jar jarfile="LSysteme.jar" basedir="${projet.bin.dir}" manifest="${basedir}/Manifest.txt"/>
+	</target>
+</project>
